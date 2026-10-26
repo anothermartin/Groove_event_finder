@@ -1,5 +1,16 @@
 <!doctype html>
 <html lang="en">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  #grooveMap {
+    height: 320px;
+    min-height: 260px;
+    width: 100%;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #eee;
+  }
+</style>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -31,7 +42,7 @@
 </section>
 <section class="section wrap" id="map"><div class="mapsection">
   <div><div class="eyebrow">Know before you go</div><h2>See the place.<br>Find your way.</h2><p>Every published event should have a checked venue location. Open directions in your preferred navigation app and plan the trip before leaving home.</p><button class="primary" onclick="window.open('https://www.openstreetmap.org/search?query=Makhado%2C%20Limpopo%2C%20South%20Africa','_blank')">Explore Makhado on map ↗</button><p class="notice">Map artwork here is illustrative. Event-level directions open a real mapping service.</p></div>
-  <div class="mapvisual" aria-label="Illustrative map preview"><div class="road"></div><div class="road two"></div><div class="maplabel" style="left:8%;top:16%">Louis Trichardt</div><div class="maplabel" style="right:7%;bottom:17%">Local events</div><div class="mapdot"><span>•</span></div></div>
+  <div id="grooveMap" class="mapvisual" aria-label="Interactive map of Makhado"></div>
 </div></section>
 <section class="section wrap" id="submitInfo"><div class="mapsection" style="background:#fff;border:1px solid var(--line)">
   <div><div class="eyebrow">For organizers & venues</div><h2>Put your event on the map.</h2><p>We're shaping a simple submission process for promoters, clubs, schools, sports organizers and community groups.</p><button class="primary" onclick="alert('Prototype only: the public submission form will be added in a later build.')">Submit an event (demo)</button></div>
@@ -56,5 +67,13 @@ function openEvent(id){const e=data.find(x=>x.id===id);document.getElementById("
 function closeModal(){document.getElementById("modal").classList.remove("open");document.body.style.overflow=""}
 function addReview(ev,id){ev.preventDefault();const e=data.find(x=>x.id===id);const name=document.getElementById("reviewName").value.trim();const stars=Number(document.getElementById("reviewStars").value);const body=document.getElementById("reviewText").value.trim();e.reviewsList.push([name,"★".repeat(stars)+"☆".repeat(5-stars),body+" (Demo review; not stored.)"]);e.reviews=e.reviewsList.length;e.rating=e.reviewsList.reduce((s,r)=>s+(r[1].match(/★/g)||[]).length,0)/e.reviews;openEvent(id);renderEvents()}
 document.getElementById("searchBtn").onclick=renderEvents;document.getElementById("search").addEventListener("keydown",e=>{if(e.key==="Enter")renderEvents()});document.getElementById("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});renderCats();renderEvents();
+const grooveMap = L.map("grooveMap").setView([-23.043, 29.904], 13);
+
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 19,
+  attribution:
+    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+}).addTo(grooveMap);
 </script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </body></html>
